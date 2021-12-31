@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewpoer" content="width=decice-width initial-scale=1.0">
+	<title>
+		SocialApp
+	</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Zen+Tokyo+Zoo&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+</head>
+<body>
+	<style type="text/css">
+	body{
+		margin:0;
+		padding: 0;
+		background-color: #C6C6C6;
+		font-family: 'Fjalla One', sans-serif;
+		}
+	.logo-doing{
+		width: 100%;
+		display: flex;
+		justify-content: center;
+
+	}
+	#logo{
+		font-family:'Zen Tokyo Zoo', cursive;
+		font-size: 75px;
+		user-select: none;
+	}
+
+
+	.login-form{
+		background-color: #f7f7f7;
+		width: 40%;
+		height: auto;
+		display: grid;
+		justify-content: center;
+		border-radius:4px;
+		box-shadow: 0 0 10px #ccc;
+	}
+	.signin-text{
+		width: 100%;
+		font-size: x-large;
+	}
+	.inputs{
+		display: grid;
+		justify-content: center;
+		grid-auto-columns: auto;
+		width: 100%;
+	}
+	.text-input{
+		width: 100%;
+		margin-bottom: 1rem;
+		border-radius: 4px;
+		height: 2rem;
+	}
+	label{
+		margin-left: 0;
+	}
+	#login-submit{
+		background-color: #525252;
+		color: #f7f7f7;
+		height: 35px;
+		width: 100%;
+		border-radius: 4px;
+		margin: 0.5rem auto 1rem auto;
+		font-family: 'Fjalla One', sans-serif;
+		font-size: large;
+		padding: auto;
+	}
+	#under-submit{
+		margin: auto;
+		margin-bottom: 1.5rem;
+	}
+
+	</style>
+	<div class="logo-doing">
+		<p id="logo">SocialApp</p>
+	</div>
+	<div class="login-form">
+				<div class="signin-text">
+					<p>Sign in to continue</p>
+				</div>
+				<form method="POST">
+				{% csrf_token %}				
+				<div class="inputs">
+					<label for="email">Your email</label>
+					<input class="text-input" type="email" name="email" placeholder="e.g.adi@pilea.com" required>
+					<label for="password">Your password</label>
+					<input class="text-input" type="password" name="password" placeholder="Your password here" required>
+					<input id="login-submit" type="submit" name="login-submit" value="Sign in">
+					<p id="under-submit">Need an account? <a href="{% url 'account:register' %}">Create one</a></p>
+				</div>
+				</form>
+					<div class="signin-text">
+						{% if login_form.non_field_errors %}
+							{% for error in login_form.non_field_errors %}
+								<p style="color: red; font-size:large; margin: auto; margin-bottom: 1.5rem; width: 50%;">{{error}}</p>
+							{% endfor %}
+						{% endif %}
+					</div>
+		</div>
+
+</body>
+</html>

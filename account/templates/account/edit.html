@@ -1,0 +1,87 @@
+{% extends 'account/base.html' %}
+{% block content %}
+	<style type="text/css">
+	.profile-edit{
+			width: 40%;
+			margin: auto;
+			display: grid;
+			grid-template-columns: auto;
+			grid-template-rows: auto;
+			justify-content: center;
+			align-items: center;
+			margin-top: 6rem;
+			background-color: #fff;
+		}
+	.username, .email, .profile_image, .bio, .profile-img{
+		width: auto;
+		margin: auto;
+	}
+	#edit-submit{
+		background-color: #525252;
+		color: #f7f7f7;
+		height: 35px;
+		width: 94%;
+		border-radius: 4px;
+		margin: 0.5rem auto 1rem auto;
+		font-family: 'Fjalla One', sans-serif;
+		font-size: large;
+		padding: auto;
+	}
+	.text-input{
+		width: 90%;
+		margin-bottom: 0.3rem;
+		border-radius: 4px;
+		height: 2rem;
+		margin: auto;
+	}
+	.motto{
+		margin: auto;
+		font-size: x-large;
+		margin-top: 1rem;
+	}
+	.profile-pic{
+		width: 100%;
+		height: auto;
+		display: flex;
+		justify-content: center;
+	}
+	#profile-img{
+		width: 150px;
+		height: 150px;
+		border-radius: 50%;
+		
+	}
+	</style>
+	<div class="profile-edit">
+		<p class="motto">Edit your profile</p>
+		<hr>
+		<div class="profile-pic">
+			<img id="profile-img" src="{{form.initial.profile_picture}}">
+		</div>
+		<form method="POST" enctype="multipart/form-data">
+		{% csrf_token %}
+		<div class="email">
+			<p>Current email: </p>
+			<input class="text-input" type="email" name="email" placeholder="Enter new email" value="{{form.initial.email}}">
+		</div>
+		<div class="username">
+			<p>Current username:</p>
+			<input class="text-input" type="text" name="username" placeholder="Enter new username" value="{{form.initial.username}}">
+		</div>
+			<p>Image Picture:</p>
+		<div class="profile_image">
+			<input style="margin-top: 0.5rem; margin-bottom: 0;" class="text-input" type="file" name="profile_picture" placeholder="" value="Change profile pic" value="{{form.initial.profile_picture}}">
+		</div>
+		<div class="bio">
+			<p>Change your Bio</p>
+			{% if form.initial.bio %}
+				<input class="text-input" type="text" name="bio" value="{{form.initial.bio}}">
+			{% else %}
+			<input class="text-input" type="text" name="bio" placeholder="Write your bio">
+			{% endif %}
+		</div>
+		<input id="edit-submit" type="submit" name="submit" value="Edit">
+		</form>	
+	</div>
+
+{% endblock content %}

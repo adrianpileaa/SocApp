@@ -1,0 +1,175 @@
+{% extends 'account/base.html' %}
+{% load static %}
+{% block content %}
+	<style type="text/css">
+		.all-account{
+			margin-top: 5rem;
+		}
+		.own-photos-display{
+			display: grid;
+			width: 60%;
+			grid-gap: 20px;
+			grid-template-columns: 1fr 1fr 1fr;
+			grid-template-rows: auto;
+			margin: auto;
+			justify-content: center;
+			margin-top: 1rem;
+		}
+		.account-display{
+			display: flex;
+			width: 60%;
+			height: auto;
+			margin: auto;
+			justify-content: center;
+			margin-top: 2rem;
+		}
+		.big-profile-pic{
+			border-radius: 50%;
+		}
+		#big-pic{
+			width: 200px;
+			height: 200px;
+			border-radius: 50%;
+		}
+		.account-infos{
+			margin-top: 1rem;
+			margin-left: 6rem;
+			display: block;
+		}
+		.username-and-edit{
+			display: flex;
+		}
+		.followers-number{
+			display: flex;
+			justify-content: center;
+		}
+		.follow-text{
+			margin-right: 1rem;
+		}
+		#username{
+			margin-right: 1rem;
+			margin-top: 0.8rem;
+			font-size: large;
+		}
+		.edit-button{
+			background-color: #fff;
+			width: 50%;
+			height: 40px;
+			border-radius: 3px;
+			padding: 0;
+			margin-top: 0.2rem;
+		}
+		.follow-button{
+			background-color: #004B9E;
+			width: auto;
+			height: 40px;
+			border-radius: 3px;
+			padding: 0.3rem;
+			margin-top: 0.2rem;
+			color: #f7f7f7;
+			cursor: pointer;
+		}
+		.unfollow-button{
+			background-color: #525252;
+			width: auto;
+			height: 40px;
+			border-radius: 3px;
+			padding: 0.3rem;
+			margin-top: 0.2rem;
+			color: #f7f7f7;
+			cursor: pointer;
+		}
+		.big-pic2{
+			height: 300px;
+			width: 300px;
+			object-fit: cover;
+		}
+		.big-pic2:hover{
+			opacity: 0.5;
+		}
+		hr{
+			width: 60%;
+		}
+		.message-button{
+			background-color: #004B9E;
+			width: auto;
+			height: 40px;
+			border-radius: 3px;
+			padding: 0.3rem;
+			margin-top: 0.2rem;
+			margin-left: 0.5rem;
+			color: #f7f7f7;
+			cursor: pointer;
+		}
+		@media only screen and (max-width: 960px){
+			.own-photos-display{
+				display: grid;
+				grid-gap: 20px;
+				grid-template-columns: 1fr;
+				grid-template-rows: auto;
+				margin: auto;
+				justify-content: center;
+				margin-top: 1rem;
+
+			}
+			.big-pic2{
+				height: 450px;
+				width: 100%;
+				margin: auto;
+			}
+
+			.suggestions{
+				display: none;
+			}
+		}
+		.hiddens{
+			display: none;
+		}
+		</style>
+	<input class="hiddens" id="special" value="{{special}}"></div>
+	<input class="hiddens" id="room_name" value={{room_name}}>
+	<div class="all-account">
+		<div class="account-display">
+			<div class="big-profile-pic">
+				<img id="big-pic" src="{{profile_picture}}">
+			</div>
+			<div class="account-infos">
+				<div class="username-and-edit">
+					<p id="username"><b>{{author.username}}</b></p>
+				{% if is_self %}
+					<button class="edit-button"><a style="text-decoration: none; color:black" href="{% url 'account:edit-view' username=username %}">Edit Profile</a></button>
+				{% else %}
+            {% if user in author.following.all %}<a href="{% url 'account:followToggle' author=author.username  %}"><button class="unfollow-button">Unfollow</button>
+            </a>
+            <button class="message-button" id="send-account-message">Message</button>
+            {% else %}
+              <a href="{% url 'account:followToggle' author=author.username  %}"><button class="follow-button">Follow</button></a>
+            {% endif %}
+				{% endif %}
+				</div>
+				<div class="followers-number">
+					<p class="follow-text"><b>26</b> posts</p>
+
+					<p class="follow-text"><b>{{author.following.count}}</b> followers</p>
+					<p class="follow-text"><b>{{author.followers.count}}</b> following</p>
+				</div>
+				<div class="bio">
+					{% if bio %}
+					<p>{{bio}}</p>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+		<hr>
+		<div class="own-photos-display">
+			{% if postes %}
+				{% for poste in postes  %}
+					<a href="{% url 'account:post-view' writer=poste.writer.username pk=poste.pk %}"><img class="big-pic2" src="{{poste.picture.url}}"></a>
+				{% endfor %}
+			{% else %}
+				<h1>No posts yet</h1>
+			{% endif %}
+		</div>	
+	</div>	
+	<script src="{% static 'js/account.js'%}"></script>
+{% endblock content %}

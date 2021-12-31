@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width initial-scale=1.0">
+	<title>
+		SocialApp
+	</title>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Zen+Tokyo+Zoo&display=swap" rel="stylesheet">
+</head>
+<body>
+	<style type="text/css">
+		/* Main style */
+		body{
+			margin: 0;
+			padding: 0;
+			font-family: 'Fjalla One', sans-serif;
+			background-color: #f3f3f3;
+			overflow-x: hidden;
+			overflow-y: auto;
+		}
+
+		.navbar{
+			height: 60px;
+			display: flex;
+			justify-content: center;
+			background-color: #525252;
+			position: fixed;
+			width: 100%;
+			z-index: 1;
+			top: 0;
+		}
+		.left-nav{
+			align-self: flex-start;
+			display: flex;
+			color: #fff;
+			height: 100%;
+		}
+
+		.right-nav{
+			margin-left: auto;
+		}
+		#account-image{
+			height: 100%;
+			object-fit: cover;
+			border-radius: 50%;
+			cursor: pointer;
+		}
+		#logo{
+			font-family:'Zen Tokyo Zoo', cursive;
+			font-size: xx-large;
+			margin: auto;
+		}
+		.dropdown{
+			display: none;
+		}
+		.middle-nav{
+			margin: auto;
+		}
+		#my-form{
+			height: 100%;
+			width: 200px;
+
+		}
+		#queryy{
+			height: 35px;
+			width: 100%;
+			border-radius: 4px;
+			padding-left: 1rem;
+			margin-left: 6rem;
+
+		}
+		#hrefff{
+			text-decoration: none;
+			color: #C6C6C6;
+		}
+		#plus-symbol{
+			width: 35px;
+			height: 35px;
+			background-color: white;
+			border-radius: 50%;
+			margin-bottom: 0.1rem;
+			margin-right: 0.3rem;
+		}
+
+		.dropdown {
+		  position: relative;
+		  display: inline-block;
+		  right: 5rem;
+		  top: 0.6rem;
+		  bottom: 0.5rem;
+		}
+		.dropimg{
+			border-radius: 50%;
+			width: 40px;
+			height: 40px;
+			padding: 0;
+			margin: 0;
+			background-color: #fff;
+		}
+
+		.dropdown-content {
+			display: none;
+			position: absolute;
+			background-color: #f1f1f1;
+			width: auto;
+			box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+			z-index: 1;
+		}
+		.dropdown-content a {
+			color: black;
+			padding: 12px 16px;
+		  	text-decoration: none;
+		  	display: block;
+		}
+
+		.dropdown-content a:hover {
+			background-color: #ddd
+		}
+
+		.show {display:block;}
+
+		@media only screen and (max-width: 720px){
+			#queryy{
+				margin-left: 1rem;
+			}
+			.dropdown{
+				right: 0.5rem;
+			}
+			.dropdown-content{
+				right: 0.5rem;
+			}
+		}
+	</style>
+	<div class="navbar">
+		<div class="left-nav">
+			<p id="logo"><a id="hrefff" href="{% url 'account:home' %}">SocialApp</a></p>
+		</div>
+		<div class="middle-nav">
+			<form id="my-form" onsubmit="return executeQuery();">
+				<input id="queryy" type="search" name="q" placeholder="Search..." method>	
+			</form>
+		</div>
+		<div class="dropdown right-nav">
+			<a href="{% url 'account:new-post' writer=request.user.username %}"><img id="plus-symbol" src="{% static 'images/plus_symbol.jpg' %}"></a>
+			<img  onclick="dropdownFunction()" class="dropimg" src="{{request.user.profile_picture.url}}">
+			<div id="myDropdown" class="dropdown-content">
+				<a href="{% url 'account:view' username=request.user.username %}">Account</a>
+				<a href="{% url 'account:logout' %}">Logout</a>		
+			</div>
+		</div>
+	</div>
+	{% block content %}
+	{% endblock content %}
+	<script type="text/javascript">
+		var user = "{{request.user}}"
+		function getToken(name) {
+	    let cookieValue = null;
+	    if (document.cookie && document.cookie !== '') {
+	        const cookies = document.cookie.split(';');
+	        for (let i = 0; i < cookies.length; i++) {
+	            const cookie = cookies[i].trim();
+	            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+	                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+	                break;
+	            }
+	        }
+	    }
+	    return cookieValue;
+		}
+		const csrftoken = getToken('csrftoken');
+	</script>
+	<script>
+		function executeQuery(){
+			var query = ""
+			query = document.getElementById('queryy').value
+			window.location.replace("{% url 'account:search' %}?q=" + query);
+			return false
+		}	
+	
+		function dropdownFunction() {
+			  document.getElementById("myDropdown").classList.toggle("show");
+			}
+
+			window.onclick = function(event) {
+			  if (!event.target.matches('.dropimg')) {
+			    var dropdowns = document.getElementsByClassName("dropdown-content");
+			    var i;
+			    for (i = 0; i < dropdowns.length; i++) {
+			      var openDropdown = dropdowns[i];
+			      if (openDropdown.classList.contains('show')) {
+			        openDropdown.classList.remove('show');
+			      }
+			    }
+			  }
+			}
+	</script>
+</body>
+</html>

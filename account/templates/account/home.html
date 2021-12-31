@@ -1,0 +1,412 @@
+{% extends 'account/base.html' %}
+{% load static %}
+
+{% block content %}
+	<style type="text/css">
+		.content{
+			display: inline-flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			margin-bottom: 3rem;
+		}
+		.all-posts{
+			width: 100%;
+			position: absolute;
+			top: 3rem;
+			left: 15rem;
+			margin: auto;
+			display: grid;
+
+		}
+		.post{
+			display: block;
+			background-color: #fff;
+			width: 550px;
+			margin-top: 3rem;
+			height: auto;
+			border: 1px solid #C6C6C6;
+			box-shadow: 0 0 10px #ccc;
+		}
+		.username-and-img{
+			display: flex;
+			margin: 0.5rem;
+
+		}
+		#username-pic{
+			width: 30px;
+			height: 30px;
+			border-radius: 50%;
+			margin:0.4rem 0 0.3 0;
+			margin-top: 0.2rem;
+
+		}
+		#username-1{
+			margin: 0.5rem 0 0.3rem 0.5rem;
+		}
+		.post-image{
+			margin: auto;
+		}
+		#post-pic{
+			width: 550px;
+			height: 450px;
+			
+		}
+		.like-and-comment{
+			display: flex;
+			margin-left: 1rem;
+		}
+		.likes-number{
+			margin-left: 1.2rem;
+			margin-top: 1rem;
+		}
+		#num-likes{
+			margin: 0;
+		}
+		.description{
+			margin-left: 1.2rem;
+		}
+		.comments{
+			margin-left: 1.2rem;
+			max-height: 120px;
+			overflow-y: scroll;
+		}
+		.date-posted{
+			font-size: small;
+			color: #C6C6C6;
+			margin-left: 1rem;
+		}
+		.suggestions{
+			display: block;
+			background-color: #fff;
+			width: 25%;
+			margin: 2rem 1rem 2rem 2rem;
+			height: auto;
+			border: 1px solid #C6C6C6;
+			box-shadow: 0 0 10px #ccc;
+			position: fixed;
+			right: 2.5rem;
+			top: 4rem;
+		}
+		.suggestions2{
+			display: flex;
+			flex-direction: column;
+			background-color: #fff;
+			height: 500px;
+			margin: 4rem auto auto 15rem;
+			width: 500px;
+			border: 1px solid #C6C6C6;
+			box-shadow: 0 0 10px #ccc;
+			
+			
+		}
+		.my-pic-and-username{
+			display: flex;
+			justify-content: flex-start;
+			margin-left: 1rem;
+			margin-top: 1rem;
+		}
+		#profile-pic2{
+			width: 50px;
+			height: 50px;
+			border-radius: 50%;
+			margin-right: 1rem;
+		}
+		#suggestion-text{
+			font-size: large;
+			margin: 0.5rem 0 0.5rem 1rem;
+		}
+		.all-sugestions{
+			display: flex;
+			justify-content: flex-start;
+			margin: 0.5rem 0 0.3rem 1rem;
+
+		}
+		#profile-pic3{
+			width: 30px;
+			height: 30px;
+			border-radius: 50%;
+			margin-top: 0.5rem;
+			margin-right: 0.3rem;
+		}
+		#hide{
+			text-decoration: none;
+			color: black;
+		}
+
+		.buttons{
+			width: 100%;
+			margin-top: auto;
+			margin-left: 0.7rem;
+		}
+		.div-buttons{
+			display: flex;
+			margin-left: 0.3rem;
+		}
+		.like-btn{
+			color: #fff;
+			height: 30px;
+			width: 50px;
+			cursor: pointer;
+			padding: 0.2rem;
+			margin: 0.3rem 0.5rem 0.3rem 0.2rem;
+			border-radius: 3px;
+			border: none;
+		}
+		#comment-btn{
+			color: #fff;
+			background-color:#525252;
+			height: 30px;
+			width: auto;
+			cursor: pointer;
+			padding: 0.2rem;
+			margin: 0.3rem 0.5rem 0.3rem 0.2rem;
+			border-radius: 3px;
+			border: none;
+		}
+		#btn-like{
+			background-color: #0095F6;
+		
+		}
+		#btn-dislike{
+			background-color: #ED4956;
+		}
+		.the-input{
+			width: 100%;	
+			}
+		#post-input{
+			width: 90%;
+			height: 25px;
+			margin: 0.5rem 0.5rem 0.5rem 0.7rem ;
+			border: none;
+			background: transparent;
+			padding: 0.5rem;
+		}
+		#send-img{
+			width: 30px;
+			height: 30px;
+		}
+		#c-submit{
+			border: none;
+			background-color: transparent;
+		}
+		#username2{
+			margin-left: 1rem;
+		}
+		.hrefing{
+			text-decoration: none;
+			color: black;
+		}
+		@media only screen and (max-width: 1400px){
+			.suggestions{
+				display: none;
+			}
+			.suggestions2{
+				margin: auto;
+				margin-top: 4rem;
+				margin-left: 0;
+			}
+		}
+		@media only screen and (max-width: 768px){
+			.all-posts{
+				left: 0;
+				width: 100%;
+			}
+			.post{
+				margin-left: 2rem;
+				width: 90%;
+			}
+			#post-pic{
+				width: 100%;
+			}
+			.suggestions2{
+				margin: auto;
+				margin-top: 4rem;			
+			}
+			}
+
+		}
+
+	</style>
+	<div class="content">
+		<div class="all-posts">
+		{% if all_dicts|length > 0 %}
+			{% for dict in all_dicts %}
+					<div class="post">
+						<div class="username-and-img">
+							<img id="username-pic" src="{{dict.post.writer.profile_picture.url}}">
+							<a id="hide" href="{% url 'account:view' username=dict.post.writer.username %}"><p id="username-1">{{dict.post.writer.username}}</p></a>
+						</div>
+						<div class="post-image">
+							<img id="post-pic" src="{{dict.post.picture.url}}">
+						</div>
+						<div class="buttons">
+							<div class="div-buttons">
+								{% if dict.is_liked == True %}
+									<button class="like-btn" id="btn-dislike" data-action="remove" data-post="{{dict.post.id}}">Dislike</button>
+								{% else %}
+									<button class="like-btn" id="btn-like" data-action="add" data-post="{{dict.post.id}}">Like</button>
+								{% endif %}
+								<button onclick="focuss()" id="comment-btn" class="btn-comment">Comment</button>
+							</div>		
+						</div>
+						<div class="likes-number">
+								<p id="num-likes">{{dict.likes}} likes</p>
+							
+						</div>
+						<div class="description">
+							<p><b>{{dict.post.writer.username}}</b>
+							{% if dict.post.description %}
+							   {{dict.post.description}}</p>
+							{% endif %}
+						</div>
+						<div class="comments">
+							{% for comment in dict.comments %}
+								<p><b>{{comment.user.username}} </b>{{comment.c_itself}}</p>
+							{% endfor %}
+						</div>
+						<div class="date-posted">
+							<p>{{dict.post.date_posted}}</p>
+						</div>
+						<div class="the-input">
+							<div style="display: flex;">
+									<input type="text" name="comment-input" id="post-input" placeholder="Add a comment...">
+									<button type="submit" id="c-submit" class="ccc" data-action="add-comment" data-post="{{dict.post.id}}"><img id="send-img" src="{% static 'images/send-icon.png' %}"></button>
+							</div>
+						</div>
+					</div>
+			{% endfor %}
+			<div class="suggestions">
+						<div class="my-pic-and-username">
+							<img id="profile-pic2" src="{{self_account.profile_picture.url}}">
+							<p>{{self_account.username}}</p>
+						</div>
+						<p id="suggestion-text">Sugestions for you</p>
+						{% for suggestion in all_sugestions %}
+							<div class="all-sugestions">
+								<img id="profile-pic3" src="{{suggestion.profile_picture.url}}">
+								<a class="hrefing" href="{% url 'account:view' username=suggestion.username %}">
+								<p>{{suggestion.username}}<p></a>
+							</div>
+						{% endfor %}
+					</div>
+		{% else %}
+			<div>
+				<div class="suggestions2">
+						<div class="my-pic-and-username">
+							<img id="profile-pic2" src="{{self_account.profile_picture.url}}">
+							<p>{{self_account.username}}</p>
+						</div>
+						<br>
+						<p id="suggestion-text">Sugestions for you</p>
+						{% for suggestion in all_sugestions %}
+							<div class="all-sugestions">
+								<img id="profile-pic3" src="{{suggestion.profile_picture.url}}">
+								<a class="hrefing" href="{% url 'account:view' username=suggestion.username %}">
+								<p>{{suggestion.username}}<p></a>
+							</div>
+						{% endfor %}
+				</div>
+			</div>
+		{% endif %}
+		</div>
+	</div>
+	<script type="text/javascript">
+function focuss(){
+		document.getElementById('post-input').focus()
+	}
+likeButtons = document.getElementsByClassName('like-btn');
+	for(var i=0; i<=likeButtons.length-1; i++){
+		likeButtons[i].addEventListener('click', function(){
+			var postId = this.dataset.post;
+			var action = this.dataset.action;
+
+			console.log('postId:', postId, 'action:', action);
+			console.log('USER:', user);
+			if(user === 'AnonymousUser'){
+				console.log('You are not logged in')
+			}
+			else{
+
+				updateLikesNumber(postId, action)
+			}
+		}
+	);
+};
+
+	function updateLikesNumber(postId,action){
+		console.log('You are logged in,sending data');
+		url = '/update_likes/'
+		fetch(url,
+			{
+				method : 'POST',
+				headers : {
+					'ContentType' : 'application/json',
+					'X-CSRFToken' : csrftoken,
+				},
+				body : JSON.stringify({'postId' : postId, 'action' : action})
+			}
+			)
+		
+		.then((response) => {
+			return response.text()
+		})
+
+		.then((data) => {
+			console.log(data)
+			location.reload()
+			}
+		
+		)
+	};
+
+	commentButtons = document.getElementsByClassName('ccc')
+	for(var i=0; i<= commentButtons.length-1; i++){
+		commentButtons[i].addEventListener('click', function(){
+		var postId = this.dataset.post;
+		var action = this.dataset.action;
+		var comment = document.getElementById('post-input').value
+		
+		console.log('postId:', postId, 'action:', action, 'comment:', comment);
+		console.log('USER:', user);
+		if(user === 'AnonymousUser'){
+			console.log('You are not logged in')
+		}
+		else{	
+			if (comment.length > 0) {
+				commentSubmit(postId, action, comment)
+				console.log('Sending Data')
+			}		
+		}
+	});
+	}
+
+	function commentSubmit(postId, action, comment){
+		console.log('Sending comment to DB')
+		url = '/comment_send/'		
+		fetch(url, 
+			{
+				method : 'POST',
+				headers : {
+					'ContentType' : 'application/json',
+					'X-CSRFToken' : csrftoken,
+				},
+				body : JSON.stringify({
+					'postId' : postId, 
+					'action' : action,
+					'comment' : comment,
+				})
+			}
+		)
+
+		.then((response) => {
+			return response.text()
+		})
+		.then((action) => {
+			console.log(action)
+			location.reload()
+		})
+	};
+
+
+	</script>
+{% endblock content %}

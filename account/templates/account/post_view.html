@@ -1,0 +1,326 @@
+{% extends 'account/base.html' %}
+{% load static %}
+{% block content %}
+<style type="text/css">
+	.whole-post{
+		width: 830px;
+		margin: auto;
+		margin-top: 7rem;
+		display: flex;
+		background-color: #fff;
+		border-radius: 3px;
+		box-shadow: 0 0 10px #ccc;
+	}
+	.post-picture{
+		height: 550px;
+		width: 550px;
+
+	}
+	#post_pic{
+		height: 100%;
+		width: 550px;
+		object-fit: cover;
+	}
+	.right-part{
+		display: flex;
+		flex-direction: column;
+		height: 550px;
+		width: 280px;
+	}
+	.comms-and-stuff{
+		width: auto;
+		height: 320px;
+		overflow-y: scroll;
+		overflow-x: hidden;
+	}
+	.pic-name, .comments{
+		display: flex;
+		width: 90%;
+		height: auto;
+		margin: 0.5rem auto 0.5rem 1.5rem;
+		overflow-y: hidden;
+
+	}
+	#user-pic, #comment-user{
+		width: 50px;
+		height: 50px;
+		border-radius: 50%;
+		margin-right: 1rem;
+	}
+	#userr{
+		font-size: large;
+		margin-top: 1rem;
+	}
+	#comment-user{
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		margin-top: 0.5rem;
+		margin-right: 1rem;
+	}
+	#comment-itself{
+		margin-top: 1.1rem;
+	}
+	.buttons{
+		width: 100%;
+		margin-top: auto;
+		margin-left: 0.7rem;
+
+	}
+	.div-buttons{
+		display: flex;
+		margin-left: 0.3rem;
+	}
+	#like-btn{
+		color: #fff;
+		height: 30px;
+		width: 50px;
+		cursor: pointer;
+		padding: 0.2rem;
+		margin: 0 0.5rem auto 0.5rem;
+		border-radius: 3px;
+		border: none;
+	}
+	#comment-btn{
+		color: #fff;
+		background-color:#525252;
+		height: 30px;
+		width: auto;
+		cursor: pointer;
+		padding: 0.2rem;
+		margin: 0 0.5rem auto 0.5rem;
+		border-radius: 3px;
+		border: none;
+	}
+	.btn-like{
+		background-color: #0095F6;
+	
+	}
+	.btn-dislike{
+		background-color: #ED4956;
+	}
+	.hidden{
+		display: none;
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+	#date-posted{
+		margin-left: auto;
+		margin-right: 2rem;
+		color: #C6C6C6;
+	}
+
+	.the-input{
+		width: 100%;	
+		}
+	#post-input{
+		width: 90%;
+		height: 25px;
+		margin: 0.5rem 0.5rem 0.5rem 0.7rem ;
+		border: none;
+		background: transparent;
+		padding: 0.5rem;
+	}
+	#send-img{
+		width: 30px;
+		height: 30px;
+	}
+	#c-submit{
+		border: none;
+		background-color: transparent;
+	}
+	#x_btn{
+		border-radius: 50%;
+		border: none;
+		margin-left: auto;
+		margin-right: 2rem;
+	}
+	#x_img{
+		width: 20px;
+		height: 20px;
+		cursor: pointer;
+	}
+	#x_img:hover{
+		opacity: 0.5;
+	}
+	@media only screen and (max-width: 920px){
+		.whole-post{
+			display: block;
+			width: 550px;
+			margin: auto;
+			margin-top: 7rem;
+		}
+		#post_pic{
+			width: 550px;
+			height: 550px;;
+		}
+		.right-part{
+			width: 550px;
+		}
+	}
+	@media only screen and (max-width: 560px){
+		.whole-post{
+			width: 400px;
+		}
+		#post_pic{
+			width: 400px;
+			height: 400px;
+		}
+		.right-part{
+			width: 400px;
+			height: 400px;
+		}
+	}
+
+</style>
+<div class="whole-post">
+	<div class="post-picture">
+		<img id="post_pic" src="{{post.picture.url}}">
+	</div>
+	<div class="right-part">	
+		<div class="comms-and-stuff">
+			<div class="pic-name">
+				<img id="user-pic" src="{{post.writer.profile_picture.url}}">
+
+				<p id="userr"><b>{{post.writer.username}}</b>  
+				{% if post.description %}
+					{{post.description}}</p>
+				{% endif %}
+			</div>
+			<hr>
+			{% for comment in comments %}
+			<div class="comments">
+				<img id="comment-user" src="{{comment.user.profile_picture.url}}">
+				<p id="comment-itself"><b>{{comment.user.username}}</b>  {{comment.c_itself}}</p>
+			</div>
+			{% endfor %}
+		</div>
+		<hr style="width:auto;">
+		<div class="buttons">
+			<div class="div-buttons">
+				{% if is_liked %}
+				<button id="like-btn" class="btn-dislike" data-action="remove" data-post="{{post.id}}">Dislike</button>
+				{% else %}
+				<button id="like-btn" class="btn-like" data-action="add" data-post="{{post.id}}">Like</button>
+				{% endif %}
+				<button onclick="focuss()" id="comment-btn" class="btn-comment">Comment</button>
+				{% if myself == post.writer.username%}
+				<button id="x_btn">
+					<a href="{% url 'account:post-delete' writer=post.writer.username pk=post.id %}">
+						<img id="x_img" src="{% static 'images/delete-btn.png' %}">
+					</a>
+				</button>
+				{% endif %}
+
+			</div>
+			<div class="div-buttons">
+				<p id="likes-number">{{likes_number}} likes</p>
+				<p id="date-posted">{{post.date_posted}}</p>
+			</div>
+		</div>
+		<div class="the-input">
+				<div style="display: flex;">
+						<input type="text" name="comment-input" id="post-input" placeholder="Add a comment...">
+						<button type="submit" id="c-submit" data-action="add-comment" data-post="{{post.id}}"><img id="send-img" src="{% static 'images/send-icon.png' %}"></button>
+				</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	likeButton = document.getElementById('like-btn');
+	likeButton.addEventListener('click', function(){
+		likeButton.innerHTML = 'Dislike';
+		var postId = this.dataset.post;
+		var action = this.dataset.action;
+
+		console.log('postId:', postId, 'action:', action);
+		console.log('USER:', user);
+		if(user === 'AnonymousUser'){
+			console.log('You are not logged in')
+		}
+		else{
+
+			updateLikesNumber(postId, action)
+		}
+	}
+);
+
+	function updateLikesNumber(postId,action){
+		console.log('You are logged in,sending data');
+		url = '/update_likes/'
+		fetch(url,
+			{
+				method : 'POST',
+				headers : {
+					'ContentType' : 'application/json',
+					'X-CSRFToken' : csrftoken,
+				},
+				body : JSON.stringify({'postId' : postId, 'action' : action})
+			}
+			)
+		
+		.then((response) => {
+			return response.text()
+		})
+
+		.then((data) => {
+			console.log(data)
+			location.reload()
+			}
+		)
+	}
+	
+	function focuss(){
+		document.getElementById('post-input').focus()
+	}
+	commentButton = document.getElementById('c-submit')
+	commentButton.addEventListener('click', function(){
+		var postId = this.dataset.post;
+		var action = this.dataset.action;
+		var comment = document.getElementById('post-input').value
+		
+		console.log('postId:', postId, 'action:', action, 'comment:', comment);
+		console.log('USER:', user);
+		if(user === 'AnonymousUser'){
+			console.log('You are not logged in')
+		}
+		else{	
+			if (comment.length > 0) {
+				commentSubmit(postId, action, comment)
+			}
+			
+			
+		}
+		
+	}
+	);
+	function commentSubmit(postId, action, comment){
+		console.log('Sending comment to DB')
+		url = '/comment_send/'		
+		fetch(url, 
+			{
+				method : 'POST',
+				headers : {
+					'ContentType' : 'application/json',
+					'X-CSRFToken' : csrftoken,
+				},
+				body : JSON.stringify({
+					'postId' : postId, 
+					'action' : action,
+					'comment' : comment,
+				})
+			}
+		)
+
+		.then((response) => {
+			return response.text()
+		})
+		.then((action) => {
+			console.log(action)
+			location.reload()
+		})
+	}
+
+</script>
+{% endblock content %}

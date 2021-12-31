@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewpoer" content="width=decice-width initial-scale=1.0">
+	<title>
+		SocialApp
+	</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Zen+Tokyo+Zoo&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+</head>
+<body>
+	<style type="text/css">
+	body{
+		margin:0;
+		padding: 0;
+		background-color: #C6C6C6;
+		font-family: 'Fjalla One', sans-serif;
+		}
+
+
+
+	.login-form{
+		background-color: #f7f7f7;
+		width: 500px;
+		height: auto;
+		display: grid;
+		border-radius:4px;
+		box-shadow: 0 0 10px #ccc;
+		margin-top: 7rem;
+	}
+	.signin-text{
+		font-size: large;
+		width: 100%;
+		display: flex;
+		justify-content: center;
+	}
+
+
+	.inputs{
+		display: grid;
+		justify-content: center;
+		grid-auto-columns: auto;
+		width: 200px;
+		margin: auto;
+	}
+	.text-input{
+		width: 100%;
+		margin-bottom: 1rem;
+		border-radius: 4px;
+		height: 2rem;
+	}
+	label{
+		margin-left: 0;
+	}
+	#register-submit{
+		background-color: #525252;
+		color: #f7f7f7;
+		height: 35px;
+		width: 100%;
+		border-radius: 4px;
+		margin: 0.5rem auto 1rem auto;
+		font-family: 'Fjalla One', sans-serif;
+		font-size: large;
+		padding: auto;
+	}
+	#under-submit{
+		margin: auto;
+	}
+	.errors{
+		margin: auto;
+	}
+	</style>
+	
+	<div class="login-form">
+			<div class="signin-text">
+				<p id="sign">Register Today</p>
+			</div>
+				<div class="inputs">
+					<form method="POST">
+					{% csrf_token %}
+					<label for="email">Your email</label>
+					<input class="text-input" type="email" name="email" placeholder="e.g.adi@pilea.com" required="An email is required">
+					<label for="username">Your username</label>
+					<input class="text-input" type="text" name="username" placeholder="e.g.adipilea" required>
+					<label for="password1">Your password</label>
+					<input class="text-input" type="password" name="password1" placeholder="Your password here" required>
+					<label for="password2">Confirm your password</label>
+					<input class="text-input" type="password" name="password2" placeholder="Repeat password" required>
+					<input id="register-submit" type="submit" name="register-submit" value="Create account">
+					<p id="under-submit">Already have an account? <a href="{% url 'account:login' %}">Log in</a></p>
+					</form>
+				</div>
+				
+				<div class="errors">
+					{% for field in registration_form %}
+							<p class="text-center">
+							{% for error in field.errors %}
+							<p style="color: red">{{ error }}</p>
+							{% endfor %}
+							</p>
+					{% endfor %}
+				</div>
+	</div>
+
+</body>
+</html>

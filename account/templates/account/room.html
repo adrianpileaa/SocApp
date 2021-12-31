@@ -1,0 +1,136 @@
+{% extends 'account/base.html' %}
+{% load static %}
+{% block content %}
+	<style type="text/css">
+		.room{
+			display: flex;
+			justify-content: center;
+			flex-direction: column;
+			width: 500px;
+			height: 600px;
+			margin: auto;
+			margin-top: 5rem;
+			border-radius: 4px;
+			padding: 0 1rem;
+			box-shadow: 0px 0px 10px #ccc;
+
+		}
+		.all-messages{
+			height: 400px;
+			box-shadow: inset 0 0 5px #000000;
+			padding-top: 0;
+			padding: 1rem;
+		}
+		#room-messages{
+			overflow-y: scroll;
+			max-height: 400px;
+		}
+		#message-itself{
+			margin-left: 0.7rem;
+		}
+		.pic-username{
+			margin: 0.2rem auto 1rem auto;
+		}
+		#picc{
+			border-radius: 50%;
+			height: 60px;
+			width: 60px;
+		}
+		#usernamee{
+			margin: auto;
+			margin-left: 0.7rem;
+		}
+		.message-send{
+			display: flex;
+			align-items: center;
+		}
+		#message-send-input{
+			width: 500px;
+			padding: 0.5rem;
+			margin-top: 0;
+			border-radius: 3px;
+			border: none;
+		}
+		#message-send-submit{
+			border: none;	
+
+			margin-left: 0.2rem;		
+		}
+		#send-img{
+			margin-top: 0.3rem;
+			width: 30px;
+			height: 30px;
+		}
+
+	</style>
+	<div class="room">
+		<div class="pic-username">
+			<img id="picc" src="{{account.profile_picture.url}}">
+			<p id="usernamee"><b>{{account.username}}</b></p>
+		</div>
+		<div class="all-messages">
+			<div id="room-messages">	
+				{% for m in messages %}
+					<p id="message-itself"><b>{{m.username}}</b>:  {{m.content}}</p>
+				{% endfor %}
+			</div>
+		</div>
+		<div class="message-send">
+					<input type="text" name="message" id="message-send-input" placeholder="Send a message..">
+					<button type="submit" name="message-submit" id="message-send-submit"><img id="send-img" src="{% static 'images/send-icon.png' %}"></button>
+		</div>
+	</div>
+	{{ room_name |json_script:"json-roomname" }}
+	{{ username | json_script:"json-username"}}
+	<script type="text/javascript">
+		var myself = "{{request.user}}"
+		console.log(myself)
+		function scrollToBottom(){
+			let objDiv = document.getElementById('room-messages');
+			objDiv.scrollTop = objDiv.scrollHeight;
+		}
+		scrollToBottom()
+		const roomName = JSON.parse(document.getElementById('json-roomname').textContent);
+		const userName = JSON.parse(document.getElementById('json-username').textContent);
+		
+		const chatSocket = new WebSocket(
+			'ws://'
+			+ window.location.host
+			+ '/ws/'
+			+userName
+			+'/'
+			+roomName
+			+'/'
+			)
+		chatSocket.onmessage = function(e){
+			console.log('onmessage')
+			const data = JSON.parse(e.data)
+			if(data.message){
+					document.querySelector('#room-messages').innerHTML += ('<p id="message-itself"><b>'+data.username + '</b>:  ' + data.message + '</p>')
+			
+			}
+			else{
+				alert('The message is empty')
+			}
+			scrollToBottom()
+		}
+		chatSocket.onclose = function (e) {
+			console.log('chatSocket close unexpectedly')
+		}
+
+		document.querySelector('#message-send-submit').onclick = function(e){
+			const messageInputDOM = document.querySelector('#message-send-input');
+			const message = messageInputDOM.value;
+
+			chatSocket.send(JSON.stringify({
+				'message' : message, 
+				'username' : userName,
+				'room' : roomName
+			})
+		)
+			messageInputDOM.value = ''
+		}
+
+		document.getElementById('message-send-input').focus()
+	</script>
+{% endblock content %}

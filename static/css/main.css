@@ -1,0 +1,41 @@
+/* Main style */
+
+body{
+	margin: 0;
+	padding: 0;
+	font-family: 'Fjalla One', sans-serif;
+}
+
+.navbar{
+	height: 60px;
+	display: flex;
+	background-color: #525252;
+}
+.left-nav{
+	display: flex;
+	color: #fff;
+	height: 100%;
+}
+
+.right-nav{
+	margin-left: auto;
+}
+.account-img{
+	height: 100%;
+	margin-right: 1.5rem;
+}
+#account-image{
+	height: 100%;
+}
+#logo{
+	font-family:'Zen Tokyo Zoo', cursive;
+	font-size: xx-large;
+	margin: auto;
+}
+.nav-text{
+	font-size: xx-large;
+	margin: auto;
+	margin-left: 1.5rem;
+	text-decoration: none;
+	color: #f7f7f7;
+}

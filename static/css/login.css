@@ -1,0 +1,40 @@
+body{
+	margin:0;
+	padding: 0;
+	background-color: #C6C6C6;
+	font-family: 'Fjalla One', sans-serif;
+}
+.logo-doing{
+	width: 100%;
+	display: flex;
+	justify-content: center;
+
+}
+#logo{
+	font-family:'Zen Tokyo Zoo', cursive;
+	font-size: 75px;
+}
+
+
+.login-form{
+	background-color: #f7f7f7;
+	width: 33%;
+	margin: auto;
+	height: auto;
+	display: grid;
+	justify-content: center;
+	border-radius:4px;
+	box-shadow: 0 0 5px #ccc;
+}
+.signin-text{
+	width: 100%;
+	font-size: x-large;
+}
+.inputs{
+	display: grid;
+	justify-content: center;
+	grid-auto-columns: auto;
+}
+.text-input{
+	width: 50px;
+}

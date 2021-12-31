@@ -1,0 +1,84 @@
+{% extends 'account/base.html' %}
+{% block content %}
+
+	<style type="text/css">
+		
+	.new-post{
+		display: flex;
+		width: 725px;
+		margin: auto;
+		margin-top: 10rem;
+		background-color: #fff;
+		box-shadow: 0 0 10px #ccc;
+		border-radius: 3px;
+		
+	}
+
+	.pic_itself{
+		height: 450px;
+		width: 450px;
+	}
+	#new_pic{
+		width: 450px;
+		height: 450px;
+		object-fit: cover;
+	}
+	.inputs{
+		display: flex;
+		flex-direction: column;	
+		margin-left: 1rem;
+	}
+	#descriptionn{
+		height: 15px;
+		padding: 0.5rem;
+		width: 80%;
+		border-radius: 3px;
+		border-width: 1px;
+	}
+	#button{
+		height: 35px;
+		width: 90%;
+		max-width: 200px;
+		background-color: #004B9E;
+		color: #f3f3f3;
+		border-radius: 3px;
+		margin-top: 3rem;
+		cursor: pointer;
+	}
+
+	#button:hover{
+		background-color: #004087;
+	}
+	@media only screen and (max-width: 960px){
+		.new-post{
+			display: block;
+			width: 450px;
+		}
+	}
+
+	</style>
+		<div class="new-post">
+				<div class="pic_itself">
+					<img id="new_pic">
+				</div>
+	  			<div class="inputs">
+	  			<form method="POST" enctype="multipart/form-data" runat="server">
+	  				{% csrf_token %}
+	  				<label for="description">Choose a description: </label>
+	  				<input type="text" id="descriptionn" name="description" placeholder="Say something interesting..">
+	  				<label for="picture">Select an image: </label>
+	  				<input type="file" id="picturee" name="picture" required>
+	  				<input type="submit" id="button" name="post-submit" value="Post">
+	  			</form>
+	  			</div>
+		</div>
+	<script type="text/javascript">
+		picturee.onchange = evt => {
+ 			const [file] = picturee.files
+			if (file) {
+			new_pic.src = URL.createObjectURL(file)
+  		}
+	}
+	</script>
+
+{% endblock content %}
